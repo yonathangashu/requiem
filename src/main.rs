@@ -5,6 +5,9 @@ fn main() {
     println!("{}", supported);
 }
 
+// Sets EAX to the leaf passed in. Then calls CPUID and returns resulting register values
+// Push and pop of rbx are required because LLVM treats RBX as a restricted callee-saved register
+// inout("eax") sets EAX to leaf and also outputs its value at the end of the asm to eax variable
 fn cpuid(leaf: u32) -> (u32, u32, u32, u32) {
     let eax: u32;
     let ebx: u32;

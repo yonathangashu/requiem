@@ -35,7 +35,7 @@ pub fn rdmsr(index: u32) -> u64 {
             out("edx") edx,
         );
     }
-    (edx << 32 | eax).into()
+    (edx as u64) << 32 | eax as u64
 }
 
 // Sets ecx to index, sets edx:eax to upper:lower of val, then calls write MSR

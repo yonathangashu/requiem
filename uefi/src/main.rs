@@ -1,8 +1,11 @@
 #![no_std]
 #![no_main]
 
+mod uefi_ops;
+
 use hvcore::ALLOCATION_SIZE;
 use hvcore::allocator::ALLOCATOR;
+use log::info;
 use uefi::boot::*;
 use uefi::prelude::*;
 use uefi::print;
@@ -10,7 +13,7 @@ use uefi::print;
 #[entry]
 fn main() -> Status {
     uefi::helpers::init().unwrap();
-    print!("Requiem loading...");
+    print!("equiem loading...");
 
     let pages_result = allocate_pages(
         AllocateType::AnyPages,
@@ -26,10 +29,10 @@ fn main() -> Status {
         }
     };
 
-    print!("Pointer to start of allocated chunk: {:#?}", pages);
+    info!("Pointer to start of allocated chunk: {:#?}", pages.addr());
     ALLOCATOR.init(pages.addr().into(), ALLOCATION_SIZE);
-    print!("Bump pointer: {:#?}", ALLOCATOR.get_bump_ptr());
-    print!("End addresses: {:#?}", ALLOCATOR.get_end_addr());
+    info!("Bump pointer: {:#?}", ALLOCATOR.get_bump_ptr());
+    info!("End addresses: {:#?}", ALLOCATOR.get_end_addr());
 
     Status::SUCCESS
 }

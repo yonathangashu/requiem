@@ -2,6 +2,7 @@
 
 pub mod allocator;
 pub mod instructions;
+pub mod platform_ops;
 pub mod vmx;
 
 pub const PAGE_SIZE: usize = 4096;

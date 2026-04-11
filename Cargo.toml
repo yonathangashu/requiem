@@ -3,3 +3,7 @@ members = [
     "hvcore",
     "uefi",
 ]
+
+[workspace.dependencies]
+hvcore = { path = "./hvcore" }
+uefi = { "./uefi" }

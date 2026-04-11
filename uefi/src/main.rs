@@ -1,9 +1,10 @@
 #![no_std]
 #![no_main]
 
+use hvcore::ALLOCATION_SIZE;
+use hvcore::allocator::ALLOCATOR;
 use uefi::boot::*;
 use uefi::prelude::*;
-
 use uefi::print;
 
 #[entry]
@@ -26,6 +27,9 @@ fn main() -> Status {
     };
 
     print!("Pointer to start of allocated chunk: {:#?}", pages);
+    ALLOCATOR.init(pages.addr().into(), ALLOCATION_SIZE);
+    print!("Bump pointer: {:#?}", ALLOCATOR.get_bump_ptr());
+    print!("End addresses: {:#?}", ALLOCATOR.get_end_addr());
 
     Status::SUCCESS
 }

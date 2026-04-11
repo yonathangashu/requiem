@@ -92,6 +92,7 @@ dependencies = [
 name = "uefi"
 version = "0.1.0"
 dependencies = [
+ "hvcore",
  "uefi 0.37.0",
 ]
 

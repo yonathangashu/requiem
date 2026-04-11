@@ -1,4 +1,4 @@
-use std::arch::asm;
+use core::arch::asm;
 
 // Sets EAX to the leaf passed in. Then calls CPUID and returns resulting register values
 // Push and pop of rbx are required because LLVM treats RBX as a restricted callee-saved register

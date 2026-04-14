@@ -5,5 +5,7 @@ pub mod instructions;
 pub mod platform_ops;
 pub mod vmx;
 
+pub use allocator::BumpAllocator;
+
 pub const PAGE_SIZE: usize = 4096;
 pub const ALLOCATION_SIZE: usize = 1024 * 4096;

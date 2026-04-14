@@ -9,12 +9,6 @@ pub struct BumpAllocator {
     end_addr: UnsafeCell<usize>,
 }
 
-#[global_allocator]
-pub static ALLOCATOR: BumpAllocator = BumpAllocator {
-    bump_ptr: UnsafeCell::new(0),
-    end_addr: UnsafeCell::new(0),
-};
-
 // UEFI is single-threaded by default so we can confidently say it wont be accessed from multiple
 // threads
 unsafe impl Sync for BumpAllocator {}
@@ -40,7 +34,19 @@ unsafe impl GlobalAlloc for BumpAllocator {
     unsafe fn dealloc(&self, _ptr: *mut u8, _layout: core::alloc::Layout) {}
 }
 
+impl Default for BumpAllocator {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl BumpAllocator {
+    pub const fn new() -> Self {
+        Self {
+            bump_ptr: UnsafeCell::new(0),
+            end_addr: UnsafeCell::new(0),
+        }
+    }
     pub fn init(&self, bump_ptr_addr: usize, size: usize) {
         let end_addr = bump_ptr_addr + size;
         unsafe {

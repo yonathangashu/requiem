@@ -1,19 +1,27 @@
 #![no_std]
 #![no_main]
 
+extern crate alloc;
+
 mod uefi_ops;
 
-use hvcore::ALLOCATION_SIZE;
-use hvcore::allocator::ALLOCATOR;
+use alloc::boxed::Box;
+use hvcore::platform_ops::PLATFORM_OPS;
+use hvcore::*;
 use log::info;
 use uefi::boot::*;
 use uefi::prelude::*;
 use uefi::print;
 
+use crate::uefi_ops::UefiOps;
+
+#[global_allocator]
+static ALLOCATOR: BumpAllocator = BumpAllocator::new();
+
 #[entry]
 fn main() -> Status {
     uefi::helpers::init().unwrap();
-    print!("equiem loading...");
+    print!("Requiem loading...");
 
     let pages_result = allocate_pages(
         AllocateType::AnyPages,
@@ -33,6 +41,14 @@ fn main() -> Status {
     ALLOCATOR.init(pages.addr().into(), ALLOCATION_SIZE);
     info!("Bump pointer: {:#?}", ALLOCATOR.get_bump_ptr());
     info!("End addresses: {:#?}", ALLOCATOR.get_end_addr());
+
+    let uefi_platform = UefiOps::new();
+    PLATFORM_OPS.init(Box::new(uefi_platform));
+
+    let uefi_end_addr = PLATFORM_OPS
+        .get()
+        .virt_to_physical(ALLOCATOR.get_end_addr());
+    info!("UEFI Translation of End Addr: {:#?}", uefi_end_addr);
 
     Status::SUCCESS
 }

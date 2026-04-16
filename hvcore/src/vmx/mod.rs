@@ -1,4 +1,5 @@
 use super::instructions::*;
+use super::platform_ops::PLATFORM_OPS;
 
 pub fn verify_vmx_support() -> bool {
     // Set leaf to 01H (returns feature information in ecx and edx)
@@ -41,4 +42,17 @@ pub fn set_vmxe_bit() -> Result<(), &'static str> {
         write_cr4(enabled_value);
     }
     Ok(())
+}
+pub fn initialize_core() {
+    vmx_enable().unwrap();
+    set_vmxe_bit().unwrap();
+}
+
+pub fn virtualize_system() -> Result<(), &'static str> {
+    if verify_vmx_support() {
+        PLATFORM_OPS.get().run_on_all_processors(initialize_core);
+        Ok(())
+    } else {
+        Err("System doesn't support virtualization")
+    }
 }

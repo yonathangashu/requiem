@@ -7,4 +7,4 @@ cargo build
 
 cp "${REPO_DIR}/target/x86_64-unknown-uefi/debug/uefi.efi" "${DEST_DIR}"
 
-qemu-system-x86_64 -serial stdio -drive if=pflash,format=raw,readonly=on,file=OVMF_CODE.fd -drive if=pflash,format=raw,readonly=on,file=OVMF_VARS.fd -drive format=raw,file=fat:rw:esp
+qemu-system-x86_64 -cpu ,+vmx -machine q35 -serial stdio -drive if=pflash,format=raw,readonly=on,file=OVMF_CODE.fd -drive if=pflash,format=raw,readonly=on,file=OVMF_VARS.fd -drive format=raw,file=fat:rw:esp

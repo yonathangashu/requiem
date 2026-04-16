@@ -29,3 +29,16 @@ pub fn vmx_enable() -> Result<(), &'static str> {
         Ok(())
     }
 }
+
+pub fn set_vmxe_bit() -> Result<(), &'static str> {
+    // CR4.VMXE = bit 13
+    const VMXE_BITMASK: u64 = 0x1 << 13;
+
+    let value = read_cr4();
+
+    if value & VMXE_BITMASK == 0 {
+        let enabled_value = value | VMXE_BITMASK;
+        write_cr4(enabled_value);
+    }
+    Ok(())
+}

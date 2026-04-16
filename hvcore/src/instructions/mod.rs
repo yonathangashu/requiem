@@ -51,3 +51,25 @@ pub fn wrmsr(index: u32, val: u64) {
         );
     }
 }
+
+// Read from Control Register 4
+pub fn read_cr4() -> u64 {
+    let cr4: u64;
+    unsafe {
+        asm!(
+            "mov rax, cr4",
+            out("rax") cr4,
+        );
+    }
+    cr4
+}
+
+// Write to Control Register 4
+pub fn write_cr4(val: u64) {
+    unsafe {
+        asm!(
+            "mov cr4, rax",
+            in("rax") val,
+        );
+    }
+}

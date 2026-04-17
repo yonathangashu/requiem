@@ -6,7 +6,6 @@ extern crate alloc;
 mod uefi_ops;
 
 use alloc::boxed::Box;
-use hvcore::instructions::cpuid;
 use hvcore::platform_ops::PLATFORM_OPS;
 use hvcore::vmx::virtualize_system;
 use hvcore::*;
@@ -52,9 +51,8 @@ fn main() -> Status {
         .virt_to_physical(ALLOCATOR.get_end_addr());
     info!("UEFI Translation of End Addr: {:#?}", uefi_end_addr);
 
-    // DEBUGGING CPUID - MacOS is incapable of running VMX virtualization :(
-    const FEATURE_INFO_LEAF: u32 = 0x01;
-    info!("{:#?}", cpuid(FEATURE_INFO_LEAF));
+    // Verify system support for virtualization
+    // Initialize all cores w/ vmx_enable and set CR4.VMXXE bit
     virtualize_system().unwrap();
 
     Status::SUCCESS

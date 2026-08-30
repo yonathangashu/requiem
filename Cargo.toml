@@ -7,4 +7,4 @@ members = [
 [workspace.dependencies]
 log = "0.4"
 hvcore = { path = "./hvcore" }
-uefi = { "./uefi" }
+uefi = { path = "./uefi" }

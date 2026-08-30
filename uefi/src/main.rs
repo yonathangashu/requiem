@@ -22,7 +22,7 @@ static ALLOCATOR: BumpAllocator = BumpAllocator::new();
 #[entry]
 fn main() -> Status {
     uefi::helpers::init().unwrap();
-    print!("Requiem loading...");
+    print!("Requiem loading...\n");
 
     let pages_result = allocate_pages(
         AllocateType::AnyPages,
@@ -54,6 +54,11 @@ fn main() -> Status {
     // Verify system support for virtualization
     // Initialize all cores w/ vmx_enable and set CR4.VMXXE bit
     virtualize_system().unwrap();
+    loop {
+        unsafe {
+            core::arch::asm!("hlt");
+        }
+    }
 
     Status::SUCCESS
 }

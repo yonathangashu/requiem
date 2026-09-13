@@ -39,10 +39,10 @@ fn main() -> Status {
         }
     };
 
-    info!("Pointer to start of allocated chunk: {:#?}", pages.addr());
+    info!("Pointer to start of allocated chunk: {:#x}", pages.addr());
     ALLOCATOR.init(pages.addr().into(), ALLOCATION_SIZE);
-    info!("Bump pointer: {:#?}", ALLOCATOR.get_bump_ptr());
-    info!("End addresses: {:#?}", ALLOCATOR.get_end_addr());
+    info!("Bump pointer: {:#x}", ALLOCATOR.get_bump_ptr());
+    info!("End addresses: {:#x}", ALLOCATOR.get_end_addr());
 
     let uefi_platform = UefiOps::new();
     PLATFORM_OPS.init(Box::new(uefi_platform));
@@ -50,12 +50,13 @@ fn main() -> Status {
     let uefi_end_addr = PLATFORM_OPS
         .get()
         .virt_to_physical(ALLOCATOR.get_end_addr());
-    info!("UEFI Translation of End Addr: {:#?}", uefi_end_addr);
+    info!("UEFI Translation of End Addr: {:#x}", uefi_end_addr);
 
     let vmxon_region = vmx::vmxon::VMXONRegion::new();
     let vmxon_phys_addr = vmxon_region.get_phys_addr();
-    info!("VMXON Physical Address: {:#?}", vmxon_phys_addr);
+    info!("VMXON Physical Address: {:#x}", vmxon_phys_addr);
 
+    info!("New bump pointer: {:#x}", ALLOCATOR.get_bump_ptr());
     // Verify system support for virtualization
     // Initialize all cores w/ vmx_enable and set CR4.VMXXE bit
     virtualize_system().unwrap();

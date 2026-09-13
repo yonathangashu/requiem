@@ -8,6 +8,7 @@ mod uefi_ops;
 use alloc::boxed::Box;
 use hvcore::platform_ops::PLATFORM_OPS;
 use hvcore::vmx::virtualize_system;
+use hvcore::vmx::vmxon::VMXONRegion;
 use hvcore::*;
 use log::info;
 use uefi::boot::*;
@@ -50,6 +51,10 @@ fn main() -> Status {
         .get()
         .virt_to_physical(ALLOCATOR.get_end_addr());
     info!("UEFI Translation of End Addr: {:#?}", uefi_end_addr);
+
+    let vmxon_region = vmx::vmxon::VMXONRegion::new();
+    let vmxon_phys_addr = vmxon_region.get_phys_addr();
+    info!("VMXON Physical Address: {:#?}", vmxon_phys_addr);
 
     // Verify system support for virtualization
     // Initialize all cores w/ vmx_enable and set CR4.VMXXE bit

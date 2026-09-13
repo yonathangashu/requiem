@@ -1,6 +1,6 @@
 use super::instructions::*;
 use super::platform_ops::PLATFORM_OPS;
-mod vmxon;
+pub mod vmxon;
 
 pub fn verify_vmx_support() -> bool {
     // Set leaf to 01H (returns feature information in ecx and edx)

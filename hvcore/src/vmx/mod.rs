@@ -50,6 +50,10 @@ pub fn initialize_core() {
     let vmxon_region = vmxon::VMXONRegion::new();
     let vmxon_phys_addr = vmxon_region.get_phys_addr();
     vmxon(vmxon_phys_addr as u64).unwrap();
+    // Test to make sure that the error handling catches a second vmxon call
+    let vmxon_region2 = vmxon::VMXONRegion::new();
+    let vmxon_phys_addr2 = vmxon_region2.get_phys_addr();
+    vmxon(vmxon_phys_addr2 as u64).unwrap();
 }
 
 pub fn virtualize_system() -> Result<(), &'static str> {

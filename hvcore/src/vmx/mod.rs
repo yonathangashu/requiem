@@ -47,6 +47,9 @@ pub fn set_vmxe_bit() -> Result<(), &'static str> {
 pub fn initialize_core() {
     vmx_enable().unwrap();
     set_vmxe_bit().unwrap();
+    let vmxon_region = vmxon::VMXONRegion::new();
+    let vmxon_phys_addr = vmxon_region.get_phys_addr();
+    vmxon(vmxon_phys_addr as u64).unwrap();
 }
 
 pub fn virtualize_system() -> Result<(), &'static str> {

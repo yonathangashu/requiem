@@ -2,4 +2,4 @@
 
 ## Overview
 
-A Type-2 Hypervisor writtein in Rust
+A Platform-Agnostic Type-1 Hypervisor written in Rust

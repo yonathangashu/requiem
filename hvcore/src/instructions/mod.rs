@@ -73,3 +73,24 @@ pub fn write_cr4(val: u64) {
         );
     }
 }
+
+// Execute vmxon instruction
+// Pass a ptr to VMXON region as the operand
+pub fn vmxon(region: u64) -> Result<(), &'static str> {
+    let cf: u8;
+    unsafe {
+        asm!(
+        "vmxon [{r}]",
+        "setc {cf}",
+        cf = out(reg_byte) cf,
+        r = in(reg) &region,
+        );
+    }
+    if cf == 0 {
+        Ok(())
+    } else {
+        Err(
+            "vmxon failed before VMX entry. Ensure the VMXON region is 4KB aligned, and the revision ID is correctly set.",
+        )
+    }
+}
